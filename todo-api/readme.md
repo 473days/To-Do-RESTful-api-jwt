@@ -1,8 +1,8 @@
-# 🚀 Flask To-Do API
+#  Flask To-Do API
 
 A full-featured RESTful API for a To-Do application built with Python Flask, featuring JWT authentication, SQLite database, and a web interface for testing.
 
-## ✨ Features
+## Features
 
 - ✅ User registration and login with JWT tokens
 - ✅ Full CRUD operations for To-Do items
@@ -12,4 +12,4 @@ A full-featured RESTful API for a To-Do application built with Python Flask, fea
 - ✅ Proper error handling and validation
 - ✅ Unit tests with pytest
 
-## 🏗️ Project Structure
+## Project Structure

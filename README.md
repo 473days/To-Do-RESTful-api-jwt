@@ -1,4 +1,3 @@
-# To-Do-RESTful-api-jwt
 
 # Anwendungsübersicht
 

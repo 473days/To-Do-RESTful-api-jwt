@@ -9,33 +9,52 @@
 
 # Hauptmerkmale
 JWT-basierte Authentifizierung mit sicheren Zugangstokens
+
 Vollständige CRUD-Operationen für To-Do-Einträge
+
 SQLite-Datenbank mit SQLAlchemy ORM
+
 RESTful API-Design mit korrekten HTTP-Statuscodes
+
 Interaktive Web-Oberfläche zum Testen der API
+
 Umfassende Fehlerbehandlung und Validierung
+
 Unit-Tests mit pytest
 
 # Stack
 Python, Flask
+
 Flask-SQLAlchemy, Flask-JWT-Extended, Flask-Bcrypt
+
 SQLite (produktionsbereit für PostgreSQL/MySQL)
+
 HTML, CSS, JavaScript für die Web-Oberfläche
+
 pytest für Testing
 
 # Projektstruktur
 app.py: Hauptanwendung mit allen API-Endpunkten
+
 requirements.txt: Python-Abhängigkeiten
+
 .env.example: Vorlage für Umgebungsvariablen
+
 .gitignore: Git-Ignore-Datei
+
 templates/index.html: Web-Oberfläche
+
 tests/test_api.py: Unit-Tests
 
 # API-Endpunkte
 POST /api/auth/register: Registrierung eines neuen Benutzers
+
 POST /api/auth/login: Anmeldung und Erhalt eines JWT-Tokens
+
 GET /api/todos: Abruf aller To-Dos des Benutzers (authentifiziert)
+
 POST /api/todos: Erstellen eines neuen To-Dos (authentifiziert)
+
 GET, PUT, DELETE /api/todos/<id>: Operationen für ein bestimmtes To-Do (authentifiziert)
 
 

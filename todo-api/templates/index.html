@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do API Test Interface</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Endpoint sections */
+        .section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .method {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        
+        .method.get { background-color: #28a745; color: white; }
+        .method.post { background-color: #007bff; color: white; }
+        .method.put { background-color: #ffc107; color: #212529; }
+        .method.delete { background-color: #dc3545; color: white; }
+        
+        .endpoint {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            color: #495057;
+        }
+        
+        .section-content {
+            padding: 20px;
+        }
+        
+        /* Form elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn:disabled {
+            background-color: #6c757d;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        
+        /* Token display */
+        .token-display {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border: 1px solid #b8daff;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .token-display h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #004085;
+        }
+        
+        .token-value {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        /* Response area */
+        .response-area {
+            margin-top: 30px;
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .response-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        #status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            display: none;
+        }
+        
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status.loading {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        /* Auth status indicator */
+        .auth-status {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .auth-status.not-authenticated {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .auth-status.authenticated {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>To-Do API Test Interface</h1>
+            <p>Test the REST API endpoints for the Flask To-Do application</p>
+        </header>
+        
+        <!-- Authentication Status -->
+        <div class="auth-status not-authenticated" id="auth-status">
+            <span>Not authenticated. Please register and login to use todo features.</span>
+        </div>
+        
+        <!-- Documentation Endpoints -->
+        <div class="section">
+            <div class="section-header">
+                <span class="method get">GET</span>
+                <code class="endpoint">/</code>
+            </div>
+            <div class="section-content">
+                <p>Returns this web interface</p>
+                <button class="btn" onclick="testEndpoint('/', 'GET')">Test Endpoint</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="method get">GET</span>
+                <code class="endpoint">/api</code>
+            </div>
+            <div class="section-content">
+                <p>Get API documentation in JSON format</p>
+                <button class="btn" onclick="testEndpoint('/api', 'GET')">Get Documentation</button>
+            </div>
+        </div>
+        
+        <!-- Authentication Endpoints -->
+        <div class="section">
+            <div class="section-header">
+                <span class="method post">POST</span>
+                <code class="endpoint">/api/auth/register</code>
+            </div>
+            <div class="section-content">
+                <p>Register a new user account</p>
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" value="testuser">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" value="test123">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email (optional)</label>
+                    <input type="email" id="register-email" value="test@example.com">
+                </div>
+                <button class="btn" onclick="testRegister()">Register User</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="method post">POST</span>
+                <code class="endpoint">/api/auth/login</code>
+            </div>
+            <div class="section-content">
+                <p>Login and receive a JWT token</p>
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" value="testuser">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" value="test123">
+                </div>
+                <button class="btn" onclick="testLogin()">Login & Get Token</button>
+            </div>
+        </div>
+        
+        <!-- Token Display -->
+        <div class="token-display" id="token-display">
+            <h3>Current Authentication Token</h3>
+            <div class="token-value" id="current-token">No token available. Please login first.</div>
+            <button class="btn btn-secondary" onclick="copyToken()">Copy Token</button>
+        </div>
+        
+        <!-- Todo Endpoints -->
+        <div class="section">
+            <div class="section-header">
+                <span class="method get">GET</span>
+                <code class="endpoint">/api/todos</code>
+            </div>
+            <div class="section-content">
+                <p>Get all todo items (requires authentication)</p>
+                <button class="btn" id="get-todos-btn" onclick="getTodos()">Get Todos</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="method post">POST</span>
+                <code class="endpoint">/api/todos</code>
+            </div>
+            <div class="section-content">
+                <p>Create a new todo item (requires authentication)</p>
+                <div class="form-group">
+                    <label for="todo-title">Title</label>
+                    <input type="text" id="todo-title" value="My first todo">
+                </div>
+                <div class="form-group">
+                    <label for="todo-description">Description</label>
+                    <textarea id="todo-description">This is my first todo item</textarea>
+                </div>
+                <button class="btn" id="create-todo-btn" onclick="createTodo()">Create Todo</button>
+            </div>
+        </div>
+        
+        <!-- Response Area -->
+        <div class="response-area">
+            <div class="response-header">
+                <h2>Response</h2>
+                <div id="status"></div>
+            </div>
+            <pre id="response">Select an endpoint to test and see the response here.</pre>
+        </div>
+    </div>
+
+    <script>
+        let currentToken = '';
+        
+        function updateAuthStatus() {
+            const authStatusEl = document.getElementById('auth-status');
+            const tokenDisplayEl = document.getElementById('token-display');
+            const getTodosBtn = document.getElementById('get-todos-btn');
+            const createTodoBtn = document.getElementById('create-todo-btn');
+            
+            if (currentToken) {
+                // User is authenticated
+                authStatusEl.className = 'auth-status authenticated';
+                authStatusEl.innerHTML = '<span>✓ Authenticated. You can now use todo endpoints.</span>';
+                tokenDisplayEl.style.display = 'block';
+                
+                // Enable todo buttons
+                getTodosBtn.disabled = false;
+                getTodosBtn.style.backgroundColor = '#28a745'; // Green for GET
+                createTodoBtn.disabled = false;
+                createTodoBtn.style.backgroundColor = '#007bff'; // Blue for POST
+            } else {
+                // User is not authenticated
+                authStatusEl.className = 'auth-status not-authenticated';
+                authStatusEl.innerHTML = '<span>Not authenticated. Please register and login to use todo features.</span>';
+                tokenDisplayEl.style.display = 'none';
+                
+                // Disable todo buttons
+                getTodosBtn.disabled = true;
+                getTodosBtn.style.backgroundColor = '#6c757d';
+                createTodoBtn.disabled = true;
+                createTodoBtn.style.backgroundColor = '#6c757d';
+            }
+        }
+        
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        function formatJSON(data) {
+            if (typeof data === 'string') {
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    return data;
+                }
+            }
+            return JSON.stringify(data, null, 2);
+        }
+        
+        async function testEndpoint(url, method, body = null) {
+            showStatus('Sending request...', 'loading');
+            
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+            
+            if (url.includes('/api/todos') && currentToken) {
+                options.headers['Authorization'] = `Bearer ${currentToken}`;
+            }
+            
+            try {
+                const response = await fetch(url, options);
+                let data;
+                
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    data = { error: 'Invalid JSON response', raw: await response.text() };
+                }
+                
+                document.getElementById('response').textContent = formatJSON(data);
+                
+                if (response.ok) {
+                    showStatus(`${response.status} ${response.statusText}`, 'success');
+                } else {
+                    showStatus(`${response.status} ${response.statusText}`, 'error');
+                }
+                
+                if (url === '/api/auth/login' && data.access_token) {
+                    currentToken = data.access_token;
+                    document.getElementById('current-token').textContent = currentToken;
+                    updateAuthStatus(); // FIX: This enables the buttons
+                    showStatus('Token saved. You can now test todo endpoints.', 'success');
+                }
+                
+            } catch (error) {
+                document.getElementById('response').textContent = `Error: ${error.message || error}`;
+                showStatus(`Request failed: ${error.message || error}`, 'error');
+            }
+        }
+        
+        function testRegister() {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const email = document.getElementById('register-email').value;
+            
+            if (!username || !password) {
+                alert('Username and password are required');
+                return;
+            }
+            
+            const body = { username, password };
+            if (email) body.email = email;
+            
+            testEndpoint('/api/auth/register', 'POST', body);
+        }
+        
+        function testLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                alert('Username and password are required');
+                return;
+            }
+            
+            testEndpoint('/api/auth/login', 'POST', { username, password });
+        }
+        
+        function createTodo() {
+            if (!currentToken) {
+                alert('Please login first to get an authentication token');
+                return;
+            }
+            
+            const title = document.getElementById('todo-title').value;
+            const description = document.getElementById('todo-description').value;
+            
+            if (!title) {
+                alert('Title is required');
+                return;
+            }
+            
+            testEndpoint('/api/todos', 'POST', { title, description });
+        }
+        
+        function getTodos() {
+            if (!currentToken) {
+                alert('Please login first to get an authentication token');
+                return;
+            }
+            
+            testEndpoint('/api/todos', 'GET');
+        }
+        
+        function copyToken() {
+            const token = document.getElementById('current-token').textContent;
+            
+            if (token && token !== 'No token available. Please login first.') {
+                navigator.clipboard.writeText(token).then(() => {
+                    showStatus('Token copied to clipboard', 'success');
+                }).catch(err => {
+                    alert('Failed to copy token: ' + err);
+                });
+            } else {
+                alert('No token available to copy');
+            }
+        }
+        
+        // Initialize
+        window.onload = () => {
+            updateAuthStatus();
+        };
+    </script>
+</body>
+</html>

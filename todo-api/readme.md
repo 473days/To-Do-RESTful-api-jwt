@@ -11,5 +11,3 @@ A full-featured RESTful API for a To-Do application built with Python Flask, fea
 - ✅ Interactive web interface for testing
 - ✅ Proper error handling and validation
 - ✅ Unit tests with pytest
-
-## Project Structure
